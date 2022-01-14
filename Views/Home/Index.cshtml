@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>apex chart</h1>
+    <div class="container">    
+        <div class="row">
+            <div class="col-6">
+                <div id="bar" class=""></div>
+            </div>
+            <div class="col-6">
+                <div id="donut-chart" class=""></div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+@section scripts{
+   
+    <script>
+        var donutChart;
+        var donut;
+        $(document).ready(function () {
+            GetData();
+            GetDonutData();
+        });
+
+        function GetDonutData()
+        {
+            $.ajax({
+                url: '/Home/GetDonutChartData/',
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    //console.log(data);
+                    if (data.success) {
+                        if (data.series.length > 0) {
+                            LoadDonutChart(data.series, data.labels);
+                        } else {
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (reponse) {
+                    console.log(reponse);
+                    alert("error : " + reponse);
+                }
+            });
+        }
+
+
+        function GetData() {
+            $.ajax({
+                url: '/Home/GetChartData/',
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    //console.log(data);
+                    if (data.success) {
+                        if (data.vaultScores.length > 0) {
+                            LoadChart(data.vaultScores, data.barScores, data.beamScores, data.floorScores,  data.labels);
+                        } else {
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (reponse) {
+                    console.log(reponse);
+                    alert("error : " + reponse);
+                }
+            });
+        }
+    </script>
+}
